@@ -14,7 +14,11 @@ covbase  = base+"covariances/Box%03d_cov/Box%03d_cov_Z%d.txt"
 cosmos = np.genfromtxt("building_cosmos.txt")
 cosmos = np.delete(cosmos,0,1) #delete the boxnumber
 
-print cosmos.shape
+def lnprior(params):
+    s,q = params
+    if q <= 0.01: return -np.inf
+    return 0
+
 
 for i in xrange(0,1):#len(cosmos)):
     cos = cosmos[i]

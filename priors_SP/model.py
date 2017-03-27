@@ -3,8 +3,10 @@ The model for Matteo's mass function
 """
 import numpy as np
 import cosmocalc as cc
+from scipy import integrate
 
 mass_pivot=6.4929581370445531e13
+volume = 1050.0**3 #[Mpc/h]^3; simulation volume
 
 def set_cosmology(cos):
     ombh2,omch2,w0,ns,ln10As,H0,Neff,sigma8 = cos
@@ -15,8 +17,10 @@ def set_cosmology(cos):
     cc.set_cosmology(cosmo_dict)
     return
 
-def sq_model(s,q,M,a):
+def sq_model(lM,s,q,a):
+    M = np.exp(lM)
     return cc.tinker2008_mass_function(M,a,200)*(s*np.log10(M/mass_pivot)+q)
 
-def N_in_bin(lMbin,s,q,a):
-    
+def N_in_bin(lM_bins,s,q,a):
+    lM_bins = np.log(10**lM_bins)#switch to natural log
+    return volume * np.array([integrate.quad(sq_model,lMlow,lMhigh,args=(s,q,a),epsabs=TOL,epsrel=TOL/10.)[0] for lMlow,lMhigh in lM_bins])

@@ -16,12 +16,11 @@ cosmos = np.delete(cosmos,0,1) #delete the boxnumber
 
 print cosmos.shape
 
-#This is how you set the cosmology
 for i in xrange(0,1):#len(cosmos)):
     cos = cosmos[i]
     model.set_cosmology(cos)
     Masses = np.logspace(13,15,num=10)
-    dndm = np.array([model.sq_model(0,1.0,m,1.0) for m in Masses])
+    dndm = np.array([model.sq_model(np.log(m),0,1.0,1.0) for m in Masses])
     print Masses
     print dndm
     plt.loglog(Masses,dndm)

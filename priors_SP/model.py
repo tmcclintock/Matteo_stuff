@@ -7,6 +7,7 @@ from scipy import integrate
 
 mass_pivot=6.4929581370445531e13
 volume = 1050.0**3 #[Mpc/h]^3; simulation volume
+TOL = 1e-4
 
 def set_cosmology(cos):
     ombh2,omch2,w0,ns,ln10As,H0,Neff,sigma8 = cos
@@ -17,9 +18,9 @@ def set_cosmology(cos):
     cc.set_cosmology(cosmo_dict)
     return
 
-def sq_model(lM,s,q,a):
+def sq_model(lM,s,q,a): #Note, we need to multiply by a factor of M
     M = np.exp(lM)
-    return cc.tinker2008_mass_function(M,a,200)*(s*np.log10(M/mass_pivot)+q)
+    return cc.tinker2008_mass_function(M,a,200)*(s*np.log10(M/mass_pivot)+q)*M
 
 def N_in_bin(lM_bins,s,q,a):
     lM_bins = np.log(10**lM_bins)#switch to natural log

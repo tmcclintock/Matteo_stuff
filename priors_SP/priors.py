@@ -24,9 +24,10 @@ N_burn = 400
 
 single_test = False
 best_result = False
-do_mcmc = True
+do_mcmc = False
+show_comparison = True
 show_corner = False
-save_results = True
+save_results = False
 FROM_SCRATCH = False
 
 savebase = "./txtfiles/"
@@ -100,6 +101,17 @@ for i in xrange(0,N_cos):
         print "\tDone with Box%03d"%i
         np.savetxt(savebase+"chain_Box%03d.txt"%i,chain)
         print "\tchain saved for Box%03d"%i
+
+    if show_comparison:
+        s,q = best_params[i]
+        import visualize
+        lM = lM_bins_array[-1]
+        N_data = N_array[-1]
+        icov = icov_array[-1]
+        cov = np.linalg.inv(icov)
+        a = a_array[-1]
+        N_model = model.N_in_bin(lM,s,q,a)
+        visualize.NM_plot(np.log10(np.mean(10**lM,1)), N_data, np.sqrt(np.diag(cov)), np.log10(np.mean(10**lM,1)), N_model)
 
     if show_corner:
         chain = np.loadtxt(savebase+"chain_Box%03d.txt"%i)
